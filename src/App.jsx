@@ -17,10 +17,11 @@ const App = () => {
         res.json()
       );
       const longLivedPageTokenEndpoint = `https://graph.facebook.com/v17.0/${userId}/accounts?access_token=${longLivedUserToken}`;
-      const { data } = await fetch(longLivedPageTokenEndpoint).then((res) =>
-        res.json()
-      );
-      setFinalToken(data?.[0].access_token);
+      const longLivedPageTokenResponse = await fetch(
+        longLivedPageTokenEndpoint
+      ).then((res) => res.json());
+      console.log(longLivedPageTokenResponse);
+      setFinalToken(longLivedPageTokenResponse?.data?.[0].access_token);
     } catch (e) {
       setError(e);
     }
