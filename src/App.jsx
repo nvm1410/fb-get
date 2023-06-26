@@ -83,7 +83,7 @@ const App = () => {
         value={appSecret}
         onChange={(e) => setAppSecret(e.target.value)}
       />
-      <button onClick={onLoginClick}>Login with Facebook</button>
+      <button onClick={onLoginClick}>Login and get page access token</button>
       {finalToken && <p>Page Access Token: {finalToken}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
