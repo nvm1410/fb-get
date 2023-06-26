@@ -1,22 +1,28 @@
+import { TextField } from "@mui/material";
 import React, { useState, useEffect } from "react";
-const APP_ID = "1388353131952099";
-const APP_SECRET = "c46a85e5c6e353e3d5f215e5e4aee00a";
 const App = () => {
-  const [isLoggedin, setIsLoggedin] = useState(false);
+  const [appId, setAppId] = useState("");
+  const [appSecret, setAppSecret] = useState("");
+  const [finalToken, setFinalToken] = useState("");
+  const [error, setError] = useState("");
   const accessFlow = async (response) => {
-    const accessToken = response.authResponse.accessToken;
-    const longLivedUserTokenEndpoint = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${APP_ID}&client_secret=${APP_SECRET}&fb_exchange_token=${accessToken}`;
-    const { access_token: longLivedUserToken } = await fetch(
-      longLivedUserTokenEndpoint
-    ).then((res) => res.json());
-    const userIdEndpoint = `https://graph.facebook.com/v17.0/me?access_token=${longLivedUserToken}`;
-    const { id: userId } = await fetch(userIdEndpoint).then((res) =>
-      res.json()
-    );
-    const longLivedPageTokenEndpoint = `https://graph.facebook.com/v17.0/${userId}/accounts?access_token=${longLivedUserToken}`;
-    const { data } = await fetch(longLivedPageTokenEndpoint).then((res) =>
-      res.json()
-    );
+    try {
+      const accessToken = response.authResponse.accessToken;
+      const longLivedUserTokenEndpoint = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${accessToken}`;
+      const { access_token: longLivedUserToken } = await fetch(
+        longLivedUserTokenEndpoint
+      ).then((res) => res.json());
+      const userIdEndpoint = `https://graph.facebook.com/v17.0/me?access_token=${longLivedUserToken}`;
+      const { id: userId } = await fetch(userIdEndpoint).then((res) =>
+        res.json()
+      );
+      const longLivedPageTokenEndpoint = `https://graph.facebook.com/v17.0/${userId}/accounts?access_token=${longLivedUserToken}`;
+      const { data } = await fetch(longLivedPageTokenEndpoint).then((res) =>
+        res.json()
+      );
+    } catch (e) {
+      setError(e);
+    }
     console.log("final token", data?.[0].access_token);
   };
   const onLoginClick = () => {
@@ -54,8 +60,32 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        padding: "20px",
+      }}>
+      <TextField
+        id="app-id"
+        label="App Id"
+        variant="standard"
+        fullWidth
+        value={appId}
+        onChange={(e) => setAppId(e.target.value)}
+      />
+      <TextField
+        id="app-secret"
+        label="App Secret"
+        variant="standard"
+        fullWidth
+        value={appSecret}
+        onChange={(e) => setAppSecret(e.target.value)}
+      />
       <button onClick={onLoginClick}>Login with Facebook</button>
+      {finalToken && <p>Page Access Token: {finalToken}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };
