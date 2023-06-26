@@ -3,24 +3,26 @@ const APP_ID = "1388353131952099";
 const APP_SECRET = "c46a85e5c6e353e3d5f215e5e4aee00a";
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
-
+  const accessFlow = async (response) => {
+    const accessToken = response.authResponse.accessToken;
+    const longLivedUserTokenEndpoint = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${APP_ID}&client_secret=${APP_SECRET}&fb_exchange_token=${accessToken}`;
+    const { access_token: longLivedUserToken } = await fetch(
+      longLivedUserTokenEndpoint
+    ).then((res) => res.json());
+    const userIdEndpoint = `https://graph.facebook.com/v17.0/me?access_token=${longLivedUserToken}`;
+    const { id: userId } = await fetch(userIdEndpoint).then((res) =>
+      res.json()
+    );
+    const longLivedPageTokenEndpoint = `https://graph.facebook.com/v17.0/${userId}/accounts?access_token=${longLivedUserToken}`;
+    const { data } = await fetch(longLivedPageTokenEndpoint).then((res) =>
+      res.json()
+    );
+    console.log("final token", data?.[0].access_token);
+  };
   const onLoginClick = () => {
     window.FB.login(
-      async function (response) {
-        const accessToken = response.authResponse.accessToken;
-        const longLivedUserTokenEndpoint = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${APP_ID}&client_secret=${APP_SECRET}&fb_exchange_token=${accessToken}`;
-        const { access_token: longLivedUserToken } = await fetch(
-          longLivedUserTokenEndpoint
-        ).then((res) => res.json());
-        const userIdEndpoint = `https://graph.facebook.com/v17.0/me?access_token=${longLivedUserToken}`;
-        const { id: userId } = await fetch(userIdEndpoint).then((res) =>
-          res.json()
-        );
-        const longLivedPageTokenEndpoint = `https://graph.facebook.com/v17.0/${userId}/accounts?access_token=${longLivedUserToken}`;
-        const { data } = await fetch(longLivedPageTokenEndpoint).then((res) =>
-          res.json()
-        );
-        console.log("final token", data?.[0].access_token);
+      function (response) {
+        accessFlow(response);
       },
       {
         scope:
