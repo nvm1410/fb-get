@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     window.fbAsyncInit = () => {
       window.FB.init({
-        appId: "your-app-id",
+        appId: "1388353131952099",
         autoLogAppEvents: true,
         xfbml: true,
         version: "v11.0",
