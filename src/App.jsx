@@ -20,12 +20,18 @@ const App = () => {
       const { data } = await fetch(longLivedPageTokenEndpoint).then((res) =>
         res.json()
       );
+      setFinalToken(data?.[0].access_token);
     } catch (e) {
       setError(e);
     }
-    console.log("final token", data?.[0].access_token);
   };
   const onLoginClick = () => {
+    window.FB.init({
+      appId: appId,
+      autoLogAppEvents: true,
+      xfbml: true,
+      version: "v11.0",
+    });
     window.FB.login(
       function (response) {
         accessFlow(response);
@@ -38,14 +44,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    window.fbAsyncInit = () => {
-      window.FB.init({
-        appId: APP_ID,
-        autoLogAppEvents: true,
-        xfbml: true,
-        version: "v11.0",
-      });
-    };
     (function (d, s, id) {
       var js,
         fjs = d.getElementsByTagName(s)[0];
