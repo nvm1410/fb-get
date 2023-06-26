@@ -82,7 +82,14 @@ const App = () => {
         onChange={(e) => setAppSecret(e.target.value)}
       />
       <button onClick={onLoginClick}>Login and get page access token</button>
-      {finalToken && <p>Page Access Token: {finalToken}</p>}
+      {finalToken && (
+        <div>
+          <p>Page Access Token:</p>
+          <p style={{ fontStyle: "italic", wordBreak: "break-word" }}>
+            {finalToken}
+          </p>
+        </div>
+      )}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
