@@ -27,6 +27,17 @@ const App = () => {
       setError(e?.toString());
     }
   };
+  const login = () => {
+    window.FB.login(
+      function (response) {
+        accessFlow(response);
+      },
+      {
+        scope:
+          "pages_show_list,ads_management,leads_retrieval,pages_read_engagement,pages_manage_metadata,pages_manage_ads",
+      }
+    );
+  };
   const onLoginClick = () => {
     window.FB.init({
       appId: appId,
@@ -35,19 +46,12 @@ const App = () => {
       version: "v11.0",
     });
     window.FB.getLoginStatus(function (statusResponse) {
-      console.log("status", statusResponse);
-      window.FB.logout(function (statusResponse) {
-        // Person is now logged out
-        window.FB.login(
-          function (response) {
-            accessFlow(response);
-          },
-          {
-            scope:
-              "pages_show_list,ads_management,leads_retrieval,pages_read_engagement,pages_manage_metadata,pages_manage_ads",
-          }
-        );
-      });
+      if (statusResponse.status !== "connected") {
+        login();
+      } else
+        window.FB.logout(function (statusResponse) {
+          login();
+        });
     });
   };
 
