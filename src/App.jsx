@@ -23,7 +23,7 @@ const App = () => {
       console.log(longLivedPageTokenResponse);
       setFinalToken(longLivedPageTokenResponse?.data?.[0].access_token);
     } catch (e) {
-      setError(e);
+      setError(e?.toString());
     }
   };
   const onLoginClick = () => {
