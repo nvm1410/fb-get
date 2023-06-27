@@ -46,6 +46,7 @@ const App = () => {
       version: "v11.0",
     });
     window.FB.getLoginStatus(function (statusResponse) {
+      console.log(window.FB.getAccessToken());
       if (statusResponse.status !== "connected") {
         login();
       } else
