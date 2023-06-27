@@ -34,17 +34,19 @@ const App = () => {
       xfbml: true,
       version: "v11.0",
     });
-    window.FB.logout(function (response) {
-      // Person is now logged out
-      window.FB.login(
-        function (response) {
-          accessFlow(response);
-        },
-        {
-          scope:
-            "pages_show_list,ads_management,leads_retrieval,pages_read_engagement,pages_manage_metadata,pages_manage_ads",
-        }
-      );
+    window.FB.getLoginStatus(function (statusResponse) {
+      window.FB.logout(function (statusResponse) {
+        // Person is now logged out
+        window.FB.login(
+          function (response) {
+            accessFlow(response);
+          },
+          {
+            scope:
+              "pages_show_list,ads_management,leads_retrieval,pages_read_engagement,pages_manage_metadata,pages_manage_ads",
+          }
+        );
+      });
     });
   };
 
