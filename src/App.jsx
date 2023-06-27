@@ -6,6 +6,7 @@ const App = () => {
   const [finalToken, setFinalToken] = useState("");
   const [error, setError] = useState("");
   const accessFlow = async (response) => {
+    console.log(response);
     try {
       const accessToken = response.authResponse.accessToken;
       const longLivedUserTokenEndpoint = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${accessToken}`;
